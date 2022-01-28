@@ -1,0 +1,58 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{%static 'css/bootstrap.min.css' %}">
+        <script src="{%static 'js/jquery.min.js' %}"></script>
+        <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+        <title>Links</title>
+    </head>
+    <body class="bg-dark text-white m-3">
+        <div class="m-3">
+            <button onclick="history.back()" class="btn btn-primary text-dark btn-block" style="background-color: #04ffab;border-color: #04ffab;font-weight: bold;" id="link">Back</button>
+        </div>
+        <div class="border rounded border-warning m-3 border-3">
+            
+            <table class="table table-hover table-dark table-bordered mb-0">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Link Address</th>
+                    <th scope="col">UUID</th>
+                    <th scope="col">Delete Link</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for i, l, u in Values %}
+                        <tr>
+                            <td>{{i}}</td>
+                            <td>{{l}}</td>
+                            <td>http://127.0.0.1:8000/{{u}}</td>
+                            <td><button class="btn btn-outline-danger" id="delete" onclick="del(this)" value={{u}}>Delete</button></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+        </div>
+    </body>
+</html>
+<script type="text/javascript">
+    function del(delthis) {
+        $.ajaxSetup({
+            headers: { "X-CSRFToken": '{{csrf_token}}' }
+        });
+        $.ajax({
+        type:'POST',
+        url:'/delete',
+        data:{
+            delthis:delthis.value,
+        },
+        success: function(data){
+            location.reload();
+        }
+        });
+  }
+</script>
